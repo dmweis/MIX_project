@@ -30,7 +30,7 @@ public class ControllerScript : MonoBehaviour
          _timeOfLastShot = Time.time;
          print("Triggered");
          GameObject newBullet = Instantiate(Bullet, transform.position, Quaternion.identity);
-         newBullet.GetComponent<Rigidbody>().AddForce(Quaternion.AngleAxis(-35, transform.right) * transform.up * -20, ForceMode.VelocityChange);
+         newBullet.GetComponent<Rigidbody>().AddForce(Quaternion.AngleAxis(-30, transform.right) * transform.up * -100, ForceMode.VelocityChange);
          Destroy(newBullet, 6);
       }
    }
