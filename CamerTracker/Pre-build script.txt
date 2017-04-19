@@ -1,0 +1,1 @@
+copy /Y "$(SolutionDir)\libs\pack\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg" "$(SolutionDir)\packages\OpenCV.Net.3.3.0\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg"

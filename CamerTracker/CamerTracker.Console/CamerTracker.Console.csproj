@@ -68,4 +68,17 @@
   </Target>
   <Import Project="..\packages\OpenCV.Net.3.3.0\build\net40\OpenCV.Net.targets" Condition="Exists('..\packages\OpenCV.Net.3.3.0\build\net40\OpenCV.Net.targets')" />
   <Import Project="..\packages\Aruco.Net.2.0.0\build\net45\Aruco.Net.targets" Condition="Exists('..\packages\Aruco.Net.2.0.0\build\net45\Aruco.Net.targets')" />
+  <PropertyGroup>
+    <PreBuildEvent>copy /Y "$(SolutionDir)\libs\pack\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg" "$(SolutionDir)\packages\OpenCV.Net.3.3.0\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>copy /Y "$(SolutionDir)\libs\opencv_core248.dll" "$(TargetDir)opencv_core248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_highgui248.dll" "$(TargetDir)opencv_highgui248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_objdetect248.dll" "$(TargetDir)opencv_objdetect248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_imgproc248.dll" "$(TargetDir)opencv_imgproc248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_flann248.dll" "$(TargetDir)opencv_flann248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_features2d248.dll" "$(TargetDir)opencv_features2d248.dll"
+copy /Y "$(SolutionDir)\libs\opencv_calib3d248.dll" "$(TargetDir)opencv_calib3d248.dll"
+copy /Y "$(SolutionDir)\libs\aruco124.dll" "$(TargetDir)aruco124.dll"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
