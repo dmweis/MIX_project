@@ -93,11 +93,18 @@ namespace CameraTracker.Camera
                         _detectedmarkers.Add(trackableMarker);
                         MarkerChanged?.Invoke(this, new MarkerChangeEventArgs(trackableMarker.Id, trackableMarker.ChessX, trackableMarker.ChessY));
                      }
-                     else if (oldTrackable.ChessX != trackableMarker.ChessX || oldTrackable.ChessY != trackableMarker.ChessY)
+                     else if (oldTrackable.ChessX != trackableMarker.ChessX ||
+                              oldTrackable.ChessY != trackableMarker.ChessY)
                      {
                         _detectedmarkers.Remove(oldTrackable);
                         _detectedmarkers.Add(trackableMarker);
-                        MarkerChanged?.Invoke(this, new MarkerChangeEventArgs(trackableMarker.Id, trackableMarker.ChessX, trackableMarker.ChessY));
+                        MarkerChanged?.Invoke(this,
+                           new MarkerChangeEventArgs(trackableMarker.Id, trackableMarker.ChessX,
+                              trackableMarker.ChessY));
+                     }
+                     else
+                     {
+                        oldTrackable.LastDetected = DateTime.Now;
                      }
                   }
                   foreach (var marker in _detectedmarkers)
