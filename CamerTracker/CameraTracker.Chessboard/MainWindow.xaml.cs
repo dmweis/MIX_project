@@ -1,74 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Reactive;
+using System.Reactive.Linq;
+using CameraTracker.Camera;
+using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace CameraTracker.Chessboard
 {
-   /// <summary>
-   /// Interaction logic for MainWindow.xaml
-   /// </summary>
-   public partial class MainWindow : Window
-   {
-      private Rectangle _dot = new Rectangle();
-      private CameraTracker.Camera.TrackingService _tracker;
-      private Timer timer;
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
+    {
+        private Dictionary<int, Rectangle> _activeMarkers = new Dictionary<int, Rectangle>();
+        private TrackingService _tracker;
 
-      public MainWindow()
-      {
-         InitializeComponent();
-         _tracker = new Camera.TrackingService();
-         timer = new Timer();
-         timer.AutoReset = true;
-         timer.Interval = 50;
-         timer.Elapsed += TimerOnElapsed;
-         timer.Start();
-         _dot.Stroke = Brushes.Red;
-         _dot.StrokeThickness = 200;
-         MainGrid.Children.Add(_dot);
-      }
+        public MainWindow()
+        {
+            InitializeComponent();
 
-      private void TimerOnElapsed(object sender, ElapsedEventArgs elapsedEventArgs)
-      {
-         if (_tracker.CurrentlyDetectedMarkers.ContainsKey(69) && _tracker.CurrentlyDetectedMarkers.ContainsKey(0) && _tracker.CurrentlyDetectedMarkers.ContainsKey(1) && _tracker.CurrentlyDetectedMarkers.ContainsKey(2))
-         {
-            var marker = _tracker.CurrentlyDetectedMarkers[69];
-            var zero = _tracker.CurrentlyDetectedMarkers[0];
-            var one = _tracker.CurrentlyDetectedMarkers[1];
-            var two = _tracker.CurrentlyDetectedMarkers[2];
-            Dispatcher.Invoke(() =>
+            _tracker = new TrackingService(5, 5);
+
+            IObservable<EventPattern<MarkerChangeEventArgs>> markerChange = Observable.FromEventPattern<MarkerChangeEventArgs>(_tracker, "MarkerChanged");
+            IObservable<EventPattern<MarketDisappearedEventArgs>> markerRemove = Observable.FromEventPattern<MarketDisappearedEventArgs>(_tracker, "MarkerDisappeared");
+
+            markerChange.Subscribe(evt =>
             {
-               int x =(int) Map(marker.X, zero.X, one.X, 0, 4);
-               int y = (int) Map(marker.Y, zero.Y, two.Y, 0, 4);
-               //System.Diagnostics.Debug.WriteLine($"X: {x} Y: {y}");
-               Grid.SetColumn(_dot, x);
-               Grid.SetRow(_dot, y);
-            });
-         }
-         else
-         {
-            Dispatcher.Invoke(() =>
-            {
-               Grid.SetColumn(_dot, 2);
-               Grid.SetRow(_dot, 2);
-            });
-         }
-      }
+                int id = evt.EventArgs.MarkerId;
+                int row = evt.EventArgs.Y;
+                int column = evt.EventArgs.X;
 
-      private static float Map(float value, float inMin, float inMax, float outMin, float outMax)
-      {
-         return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
-      }
-   }
+                Dispatcher.Invoke(() =>
+                {
+                    var rectangle = new Rectangle { Stroke = Brushes.Red, StrokeThickness = 200 };
+
+                    if (_activeMarkers.ContainsKey(id))
+                    {
+                        MainGrid.Children.Remove(_activeMarkers[id]);
+                    }
+
+                    _activeMarkers[id] = rectangle;
+                    MainGrid.Children.Add(rectangle);
+                    Grid.SetColumn(rectangle, column);
+                    Grid.SetRow(rectangle, row);
+                    Debug.WriteLine($"Column: {column} Row: {row}");
+                });
+                // Do RabbitMQ stuff
+            });
+
+            markerRemove.Subscribe(evt =>
+            {
+                int id = evt.EventArgs.MarkerId;
+
+                if (_activeMarkers.ContainsKey(id))
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        MainGrid.Children.Remove(_activeMarkers[id]);
+                    });
+                }
+                // Do RabbitMQ stuff
+            });
+
+        }
+    }
 }
