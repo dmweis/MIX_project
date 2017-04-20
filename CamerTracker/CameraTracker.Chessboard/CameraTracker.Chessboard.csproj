@@ -116,6 +116,8 @@ copy /Y "$(SolutionDir)\libs\opencv_calib3d248.dll" "$(TargetDir)opencv_calib3d2
 copy /Y "$(SolutionDir)\libs\aruco124.dll" "$(TargetDir)aruco124.dll"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>copy /Y "$(SolutionDir)\libs\pack\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg" "$(SolutionDir)\packages\OpenCV.Net.3.3.0\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg"</PreBuildEvent>
+    <PreBuildEvent>copy /Y "$(SolutionDir)\libs\pack\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg" "$(SolutionDir)\packages\OpenCV.Net.3.3.0\OpenCV.ffmpeg.overlay-Win32_v110.2.4.8.nupkg"
+copy /Y "$(SolutionDir)\libs\pack\OpenCV.overlay-Win32_v110_Release.2.4.8.nupkg" "$(SolutionDir)\packages\OpenCV.Net.3.3.0\OpenCV.overlay-Win32_v110_Release.2.4.8.nupkg"
+</PreBuildEvent>
   </PropertyGroup>
 </Project>
