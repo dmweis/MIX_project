@@ -16,6 +16,7 @@ namespace CameraTracker.Camera
 
       private int _chessBoardWidth;
       private int _chessBoardHeight;
+      private bool _KeppRunning = true;
 
       private int _detectionTimeout = 2000;
 
@@ -54,7 +55,7 @@ namespace CameraTracker.Camera
             var markerSize = 10;
             using (var capture = Capture.CreateCameraCapture(0))
             {
-               while (true)
+               while (_KeppRunning)
                {
                   IplImage image = capture.QueryFrame();
                   var detectedMarkers = detector.Detect(image, cameraMatrix, distortion, markerSize);
@@ -109,7 +110,7 @@ namespace CameraTracker.Camera
 
       public void Dispose()
       {
-         throw new NotImplementedException();
+         _KeppRunning = false;
       }
 
       private static float Map(float value, float inMin, float inMax, float outMin, float outMax)
