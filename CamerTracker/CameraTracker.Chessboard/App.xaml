@@ -1,8 +1,7 @@
 ﻿<Application x:Class="CameraTracker.Chessboard.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:CameraTracker.Chessboard"
-             StartupUri="MainWindow.xaml">
+             xmlns:local="clr-namespace:CameraTracker.Chessboard">
     <Application.Resources>
          
     </Application.Resources>
