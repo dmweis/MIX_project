@@ -33,7 +33,7 @@ namespace CameraTracker.Camera
       {
          _chessBoardHeight = chessBoardHeight;
          _chessBoardWidth = chessBoardWidth;
-         _window = new NamedWindow("Camera preview");
+         _window = new NamedWindow("Camera preview", WindowFlags.FreeRatio);
          _readerTask = Task.Run((Action)CameraLoop);
       }
 
@@ -86,7 +86,12 @@ namespace CameraTracker.Camera
                      trackableMarker.ChessX = (int)Map(trackableMarker.X, _topLeft.X, _topRight.X, 0, _chessBoardWidth);
                      trackableMarker.ChessY = (int)Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, 0, _chessBoardHeight);
                      var oldTrackable = _detectedmarkers.FirstOrDefault(marker => marker.Id == trackableMarker.Id);
-                     if (oldTrackable.ChessX != trackableMarker.ChessX || oldTrackable.ChessY != trackableMarker.ChessY)
+                     if (oldTrackable == null)
+                     {
+                        _detectedmarkers.Add(trackableMarker);
+                        MarkerChanged?.Invoke(this, new MarkerChangeEventArgs(trackableMarker.Id, trackableMarker.ChessX, trackableMarker.ChessY));
+                     }
+                     else if (oldTrackable.ChessX != trackableMarker.ChessX || oldTrackable.ChessY != trackableMarker.ChessY)
                      {
                         _detectedmarkers.Remove(oldTrackable);
                         _detectedmarkers.Add(trackableMarker);
