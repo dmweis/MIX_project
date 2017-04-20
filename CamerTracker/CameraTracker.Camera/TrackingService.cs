@@ -9,17 +9,23 @@ using OpenCV.Net;
 
 namespace CameraTracker.Camera
 {
-   public class TrackingService
+   public class TrackingService : IDisposable
    {
       private NamedWindow _window;
       private Task _readerTask;
 
-      public Dictionary<int, CustomMarker> CurrentlyDetectedMarkers { get; } = new Dictionary<int, CustomMarker>();
+      private int _chessBoardWidth;
+      private int _chessBoardHeight;
+
+      private List<TrackableMarker> Detectedmarkers;
+
+      public event EventHandler<MarkerChangeEventArgs> MarkerChanged;
+      public event EventHandler<MarketDisappearedEventArgs> MarkerDisappeared;
 
       public TrackingService()
       {
          _window = new NamedWindow("Camera preview");
-         _readerTask = Task.Factory.StartNew(CameraLoop);
+         _readerTask = Task.Run((Action)CameraLoop);
       }
 
       private void CameraLoop()
@@ -47,7 +53,7 @@ namespace CameraTracker.Camera
                   foreach (Marker detectedMarker in detectedMarkers)
                   {
                      var center = detectedMarker.Center;
-                     var customMarker = new CustomMarker(detectedMarker.Id.ToString(), center.X, center.Y);
+                     var customMarker = new TrackableMarker(detectedMarker.Id.ToString(), center.X, center.Y);
                      if (CurrentlyDetectedMarkers.ContainsKey(detectedMarker.Id))
                      {
                         CurrentlyDetectedMarkers[detectedMarker.Id] = customMarker;
@@ -64,6 +70,11 @@ namespace CameraTracker.Camera
                }
             }
          }
+      }
+
+      public void Dispose()
+      {
+         throw new NotImplementedException();
       }
    }
 }

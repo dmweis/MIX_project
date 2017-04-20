@@ -47,7 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomMarker.cs" />
+    <Compile Include="TrackableMarker.cs" />
+    <Compile Include="MarkerChangeEventArgs.cs" />
+    <Compile Include="MarketDisappearedEventArgs.cs" />
     <Compile Include="TrackingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

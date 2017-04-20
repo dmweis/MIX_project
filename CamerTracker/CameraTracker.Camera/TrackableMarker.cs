@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace CameraTracker.Camera
 {
-   public class CustomMarker
+   public class TrackableMarker
    {
       public string Name { get; }
       public float X { get; }
       public float Y { get; }
 
-      public CustomMarker(string name, float x, float y)
+      public TrackableMarker(string name, float x, float y)
       {
          Name = name;
          X = x;
