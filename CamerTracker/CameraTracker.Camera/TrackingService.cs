@@ -107,12 +107,18 @@ namespace CameraTracker.Camera
                         oldTrackable.LastDetected = DateTime.Now;
                      }
                   }
+                  var markersForRemoval = new List<TrackableMarker>();
                   foreach (var marker in _detectedmarkers)
                   {
                      if (marker.LastDetected.AddMilliseconds(_detectionTimeout) < DateTime.Now)
                      {
                         MarkerDisappeared?.Invoke(this, new MarketDisappearedEventArgs(marker.Id));
+                        markersForRemoval.Add(marker);
                      }
+                  }
+                  foreach (var marker in markersForRemoval)
+                  {
+                     _detectedmarkers.Remove(marker);
                   }
                   IplImage imageCopy = image.Clone();
                   _window.ShowImage(imageCopy);
