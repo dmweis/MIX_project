@@ -1,22 +1,22 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CameraTracker.Camera
 {
    public class TrackableMarker
    {
-      public string Name { get; }
-      public float X { get; }
-      public float Y { get; }
+      public int Id { get; }
+      public float X { get; set; }
+      public float Y { get; set; }
+      public int ChessX { get; set; }
+      public int ChessY { get; set; }
+      public DateTime LastDetected { get; set; }
 
-      public TrackableMarker(string name, float x, float y)
+      public TrackableMarker(int id, float x, float y)
       {
-         Name = name;
+         Id = id;
          X = x;
          Y = y;
+         LastDetected = DateTime.Now;
       }
    }
 }

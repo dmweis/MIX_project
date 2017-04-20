@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MarkerPosition.cs" />
     <Compile Include="TrackableMarker.cs" />
     <Compile Include="MarkerChangeEventArgs.cs" />
     <Compile Include="MarketDisappearedEventArgs.cs" />
