@@ -85,6 +85,8 @@ namespace CameraTracker.Camera
                      }
                      trackableMarker.ChessX = (int)Math.Round(Map(trackableMarker.X, _topLeft.X, _topRight.X, 0, _chessBoardWidth));
                      trackableMarker.ChessY = (int)Math.Round(Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, 0, _chessBoardHeight));
+                     trackableMarker.ChessX = Constrain(trackableMarker.ChessX, _chessBoardWidth - 1, 0);
+                     trackableMarker.ChessY = Constrain(trackableMarker.ChessY, _chessBoardHeight - 1, 0);
                      var oldTrackable = _detectedmarkers.FirstOrDefault(marker => marker.Id == trackableMarker.Id);
                      if (oldTrackable == null)
                      {
@@ -121,6 +123,15 @@ namespace CameraTracker.Camera
       private static float Map(float value, float inMin, float inMax, float outMin, float outMax)
       {
          return (value - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
+      }
+
+      private static int Constrain(int value, int max, int min)
+      {
+         if (value > max)
+         {
+            return max;
+         }
+         return value < min ? min : value;
       }
    }
 }
