@@ -83,8 +83,8 @@ namespace CameraTracker.Camera
                         _bottomLeft.Y = trackableMarker.Y;
                         continue;
                      }
-                     trackableMarker.ChessX = (int)Map(trackableMarker.X, _topLeft.X, _topRight.X, 0, _chessBoardWidth);
-                     trackableMarker.ChessY = (int)Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, 0, _chessBoardHeight);
+                     trackableMarker.ChessX = (int)Math.Round(Map(trackableMarker.X, _topLeft.X, _topRight.X, 0, _chessBoardWidth));
+                     trackableMarker.ChessY = (int)Math.Round(Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, 0, _chessBoardHeight));
                      var oldTrackable = _detectedmarkers.FirstOrDefault(marker => marker.Id == trackableMarker.Id);
                      if (oldTrackable == null)
                      {
