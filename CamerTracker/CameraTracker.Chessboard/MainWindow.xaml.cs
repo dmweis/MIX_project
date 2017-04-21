@@ -17,13 +17,10 @@ namespace CameraTracker.Chessboard
     {
         private Dictionary<int, Rectangle> _activeMarkers = new Dictionary<int, Rectangle>();
 
-        public MainWindow()
+        public MainWindow(TrackingService tracker)
         {
             InitializeComponent();
-        }
 
-        public MainWindow(TrackingService tracker) : base()
-        {
             Observable.FromEventPattern<MarkerChangeEventArgs>(tracker, "MarkerChanged")
                 .Subscribe(evt =>
                 {
