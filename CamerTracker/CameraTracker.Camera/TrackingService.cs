@@ -65,6 +65,8 @@ namespace CameraTracker.Camera
                      var center = detectedMarker.Center;
                      detectedMarker.Draw(image, Scalar.Rgb(1, 0, 0));
                      var trackableMarker = new TrackableMarker(detectedMarker.Id, center.X, center.Y);
+                     float x = Map(trackableMarker.X, _topLeft.X, _topRight.X, -0.5f, _chessBoardWidth);
+                     float y = Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, -0.5f, _chessBoardHeight);
                      if (trackableMarker.Id == 0)
                      {
                         _topLeft.X = trackableMarker.X;
@@ -83,8 +85,8 @@ namespace CameraTracker.Camera
                         _bottomLeft.Y = trackableMarker.Y;
                         continue;
                      }
-                     trackableMarker.ChessX = (int)Math.Round(Map(trackableMarker.X, _topLeft.X, _topRight.X, 0, _chessBoardWidth));
-                     trackableMarker.ChessY = (int)Math.Round(Map(trackableMarker.Y, _topLeft.Y, _bottomLeft.Y, 0, _chessBoardHeight));
+                     trackableMarker.ChessX = (int)Math.Round(x);
+                     trackableMarker.ChessY = (int)Math.Round(y);
                      trackableMarker.ChessX = Constrain(trackableMarker.ChessX, _chessBoardWidth - 1, 0);
                      trackableMarker.ChessY = Constrain(trackableMarker.ChessY, _chessBoardHeight - 1, 0);
                      var oldTrackable = _detectedmarkers.FirstOrDefault(marker => marker.Id == trackableMarker.Id);
