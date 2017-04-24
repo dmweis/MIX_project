@@ -1951,7 +1951,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1487538385208878}
-  m_LocalRotation: {x: 0.67677754, y: -0.024793359, z: 0.7357306, w: 0.0076236073}
+  m_LocalRotation: {x: 0.6767775, y: -0.024793355, z: 0.7357305, w: 0.0076236064}
   m_LocalPosition: {x: -0.13026871, y: -0.063362956, z: -0.010927687}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2163,6 +2163,7 @@ MonoBehaviour:
   shootEveryXsec: 2
   damageWhenHit: 10
   totalHealth: 100
+  tagOfPlayerShot: Fireball
 --- !u!114 &114576410946459934
 MonoBehaviour:
   m_ObjectHideFlags: 1

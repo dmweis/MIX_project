@@ -15,6 +15,7 @@ public class EnemyBehaviour : MonoBehaviour {
     public int shootEveryXsec;
     public int damageWhenHit;
     public int totalHealth;
+    public string tagOfPlayerShot;
     bool alive;
 
     // Animation states
@@ -137,7 +138,7 @@ public class EnemyBehaviour : MonoBehaviour {
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Fireball")
+        if (other.tag == tagOfPlayerShot)
         {
             health -= damageWhenHit;
             // Update healthbar
