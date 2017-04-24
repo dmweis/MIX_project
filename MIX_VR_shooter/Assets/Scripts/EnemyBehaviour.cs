@@ -48,17 +48,6 @@ public class EnemyBehaviour : MonoBehaviour {
         // Make monster always look at player
         transform.LookAt(player.transform.position);
 
-        if (Input.GetKeyDown("j"))
-        {
-            Move(new Vector3(4.57f, 0f, -2.3f));
-            
-        }
-        if (Input.GetKeyDown("k"))
-        {
-            Move(new Vector3(3.74f, 0f, -1.3f));
-        }
-
-        
         // If enemy has no health left start dying
         if (health < 1 & alive == true)
         {
@@ -126,13 +115,6 @@ public class EnemyBehaviour : MonoBehaviour {
     {
         Instantiate(fireballPrefab, fireballSpawn.position, fireballSpawn.rotation);
     }
-
-    /*public void Hit(int damage)
-    {
-        health -= damage;
-        // Update healthbar
-        healthBar.fillAmount = health / maxHealth;
-    }*/
 
     private void Move(Vector3 vector3)
     {
