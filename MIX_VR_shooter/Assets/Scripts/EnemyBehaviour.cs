@@ -117,7 +117,7 @@ public class EnemyBehaviour : MonoBehaviour {
         Instantiate(fireballPrefab, fireballSpawn.position, fireballSpawn.rotation);
     }
 
-    private void Move(Vector3 vector3)
+    public void Move(Vector3 vector3)
     {
         StartCoroutine(TeleportEffect(vector3));
     }
