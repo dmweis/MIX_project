@@ -25,26 +25,7 @@ namespace CameraTracker.Chessboard
             var factory = new ConnectionFactory { HostName = "localhost" };
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.ExchangeDeclare("marker_update", "fanout");
             _tracker = new TrackingService(5, 5);
-
-            Observable
-                .FromEventPattern<MarkerChangeEventArgs>(_tracker, "MarkerChanged")
-                .Subscribe(evt =>
-                {
-                    var marker = new
-                    {
-                        Type = "update",
-                        Id = evt.EventArgs.MarkerId,
-                        Column = evt.EventArgs.X,
-                        Row = evt.EventArgs.Y
-                    };
-
-                    var message = JsonConvert.SerializeObject(marker);
-                    var body = Encoding.UTF8.GetBytes(message);
-
-                    _channel.BasicPublish("marker_update", "", null, body);
-                });
 
             Observable
                 .FromEventPattern<MarketDisappearedEventArgs>(_tracker, "MarkerDisappeared")

@@ -31,6 +31,7 @@ namespace CameraTracker.Chessboard
             string locationQueue = channel.QueueDeclare().QueueName;
             string healthQueue = channel.QueueDeclare().QueueName;
 
+            channel.ExchangeDeclare("marker_update", "fanout");
             channel.ExchangeDeclare("location_update", "fanout");
             channel.ExchangeDeclare("health_update", "fanout");
 
@@ -84,8 +85,28 @@ namespace CameraTracker.Chessboard
                 });
 
             Observable.FromEventPattern<MarkerChangeEventArgs>(tracker, "MarkerChanged")
-                .SkipWhile(evt => evt.EventArgs.Y <= 0 || evt.EventArgs.Y >= 4)
-                .SkipWhile(evt => evt.EventArgs.MarkerId <= 2)
+                .Where(evt => evt.EventArgs.Y > 0)
+                .Where(evt => evt.EventArgs.Y != 4 || evt.EventArgs.X > 0)
+                .Where(evt => evt.EventArgs.MarkerId > 2)
+                .Where(evt =>
+                {
+                    int row = evt.EventArgs.Y;
+                    int column = evt.EventArgs.X;
+                    int id = evt.EventArgs.MarkerId;
+                    if(!_activeMarkers.ContainsKey(id))
+                    {
+                        return true;
+                    }
+                    CharacterCard element = _activeMarkers[id];
+                    bool sameAsBefore = false;
+                    Dispatcher.InvokeAsync(() =>
+                    {
+                        bool rowIsSame = Grid.GetRow(element) == row;
+                        bool columnIsSame = Grid.GetColumn(element) == column;
+                        sameAsBefore = rowIsSame && columnIsSame;
+                    }).Wait();
+                    return !sameAsBefore;
+                })
                 .Subscribe(evt =>
                 {
                     int id = evt.EventArgs.MarkerId;
@@ -114,6 +135,19 @@ namespace CameraTracker.Chessboard
                         AddToGrid(monster, row, column);
                         Debug.WriteLine($"Id: {id} moved to Column: {column} Row: {row}");
                     });
+
+                    var marker = new
+                    {
+                        Type = "update",
+                        Id = evt.EventArgs.MarkerId,
+                        Column = evt.EventArgs.X,
+                        Row = evt.EventArgs.Y
+                    };
+
+                    var message = JsonConvert.SerializeObject(marker);
+                    var body = Encoding.UTF8.GetBytes(message);
+
+                    channel.BasicPublish("marker_update", "", null, body);
                 });
 
             Observable.FromEventPattern<MarketDisappearedEventArgs>(tracker, "MarkerDisappeared")
