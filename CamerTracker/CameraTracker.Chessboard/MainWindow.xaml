@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid x:Name="MainGrid">
+        <Grid.Background>
+            <ImageBrush ImageSource="images/surface.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -25,7 +28,7 @@
 
 
         </Border>
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" Background="White">
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" >
             <Grid ShowGridLines="True">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -42,7 +45,7 @@
             </Grid>
         </Border>
         <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4">
-            <Grid x:Name="Bench">
+            <Grid x:Name="Bench" Background="#330000">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
