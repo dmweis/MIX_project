@@ -28,7 +28,7 @@ public class PlayerScript : MonoBehaviour
       if (_hp <= 0)
       {
          print("Player dead");
-         _networkHandler.SendMessage(null, string.Empty);
+         _networkHandler.SendMessage(new HealthUpdate(0, _hp), string.Empty);
       }
    }
 }
