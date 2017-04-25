@@ -142,6 +142,9 @@
       <Name>CameraTracker.Camera</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="images\surface.jpg" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(SolutionDir)\libs\opencv_core248.dll" "$(TargetDir)opencv_core248.dll"
