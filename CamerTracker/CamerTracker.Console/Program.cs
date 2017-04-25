@@ -3,47 +3,73 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Aruco.Net;
-using OpenCV.Net;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
 
-namespace CamerTracker.Console
+namespace CamerTracker.TestConsole
 {
-   class Program
-   {
-      private static NamedWindow _window;
-      static void Main(string[] args)
-      {
-         _window = new NamedWindow("Single camera window", WindowFlags.KeepRatio);
-         var parameters = new CameraParameters();
-         Size size;
-         var cameraMatrix = new Mat(3, 3, Depth.F32, 1);
-         var distortion = new Mat(1, 4, Depth.F32, 1);
-         parameters.CopyParameters(cameraMatrix, distortion, out size);
-         using (var detector = new MarkerDetector())
-         {
-            detector.ThresholdMethod = ThresholdMethod.AdaptiveThreshold;
-            detector.Param1 = 7.0;
-            detector.Param2 = 7.0;
-            detector.MinSize = 0.04f;
-            detector.MaxSize = 0.5f;
-            detector.CornerRefinement = CornerRefinementMethod.Lines;
-            var markerSize = 10;
-            using (var capture = Capture.CreateCameraCapture(0))
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            IConnection _connection;
+            IModel _channel;
+
+            //var factory = new ConnectionFactory { HostName = "localhost" };
+            var factory = new ConnectionFactory() { Uri = @"amqp://ruzmquwb:uSALbfFaxJIyw_wvT_MEWx8o-SBHaeK0@lark.rmq.cloudamqp.com/ruzmquwb" };
+            _connection = factory.CreateConnection();
+            _channel = _connection.CreateModel();
+
+            _channel.ExchangeDeclare("health_update", "fanout");
+            _channel.ExchangeDeclare("location_update", "fanout");
+            _channel.ExchangeDeclare("marker_update", "fanout");
+
+            Console.WriteLine("Welcome to Testomatic");
+            bool keepRunning = true;
+            while(keepRunning)
             {
-               while (true)
-               {
-                  IplImage image = capture.QueryFrame();
-                  var detectedMarkers = detector.Detect(image, cameraMatrix, distortion, markerSize);
-                  foreach (Marker detectedMarker in detectedMarkers)
-                  {
-                     detectedMarker.Draw(image, Scalar.Rgb(1,0,0));
-                  }
-                  IplImage imageCopy = image.Clone();
-                  _window.ShowImage(imageCopy);
-                  CV.WaitKey(1);
-               }
+                Console.WriteLine("Choose desired action");
+                Console.WriteLine("1) Hurt Character");
+                Console.WriteLine("2) Move Character");
+                Console.WriteLine("3) Move Character for game");
+                Console.WriteLine("0) End");
+                int choice = int.Parse(Console.ReadLine());
+
+                switch(choice)
+                {
+                    case 1:
+                        Console.WriteLine("Enter id: ");
+                        int id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter new health: ");
+                        int newHealth = int.Parse(Console.ReadLine());
+                        _channel.BasicPublish("health_update", "", null, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Id = id, NewHealth = newHealth })));
+                        break;
+                    case 2:
+                        Console.WriteLine("Enter id: ");
+                        id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter new row: ");
+                        int newRowLocation = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter new column: ");
+                        int newColumnLocation = int.Parse(Console.ReadLine());
+                        _channel.BasicPublish("location_update", "", null, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Id = id, NewRowLocation = newRowLocation, NewColumnLocation = newColumnLocation })));
+                        break;
+                    case 3:
+                        Console.WriteLine("Enter id: ");
+                        id = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter new row: ");
+                        newRowLocation = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Enter new column: ");
+                        newColumnLocation = int.Parse(Console.ReadLine());
+                        _channel.BasicPublish("marker_update", "", null, Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(new { Type = "update", Id = id, Row = newRowLocation, Column = newColumnLocation })));
+                        break;
+                    case 0:
+                    default:
+                        keepRunning = false;
+                        break;
+                }
             }
-         }
-      }
-   }
+            _channel.Dispose();
+            _connection.Dispose();
+        }
+    }
 }

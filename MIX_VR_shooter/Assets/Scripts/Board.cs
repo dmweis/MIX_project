@@ -38,20 +38,24 @@ public class Board : MonoBehaviour
       if (!_enemies.ContainsKey(marker.Id))
       {
          GameObject newEnemy = Instantiate(EnemyPrefab, newPosition, Quaternion.identity);
-         newEnemy.GetComponent<EnemyBehaviour>().Id = marker.Id;
-         _enemies.Add(marker.Id, newEnemy.GetComponent<EnemyBehaviour>());
+         newEnemy.GetComponentInChildren<EnemyBehaviour>().Id = marker.Id;
+         _enemies.Add(marker.Id, newEnemy.GetComponentInChildren<EnemyBehaviour>());
       }
       else
       {
-         _enemies[marker.Id].Move(newPosition);
+         EnemyBehaviour enemy = _enemies[marker.Id];
+        if (enemy != null)
+        {
+            enemy.Move(newPosition);
+        }
       }
    }
 
    private Vector3 GetAnchor(int column, int row)
    {
       float xPos = Map(column, 0, ColumnCount, transform.position.x, BottomRight.transform.position.x);
-      float yPos = Map(row, 0, RowCount, transform.position.y, BottomRight.transform.position.y);
-      return new Vector3(xPos, yPos);
+      float zPos = Map(row, 0, RowCount, transform.position.z, BottomRight.transform.position.z);
+      return new Vector3(xPos, 0, zPos);
    }
 
    public Vector2 CalculateRowCol(Vector3 position)
