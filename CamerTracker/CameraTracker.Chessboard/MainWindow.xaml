@@ -45,13 +45,17 @@
             </Grid>
         </Border>
         <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4">
-            <Grid x:Name="Bench" Background="#330000">
+            <Grid x:Name="Bench" Background="#131320" Opacity="0.85">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="1" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="2" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="3" Source="images/Bench.png" Stretch="Fill"/>
             </Grid>
         </Border>
         <Image x:Name="ImageZero" Grid.Row="0" Grid.Column="0" Source="images/Marker_0.png"/>
