@@ -52,7 +52,7 @@ public class EnemyBehaviour : MonoBehaviour
    {
 
       // Make monster always look at player
-      transform.LookAt(player.transform.position);
+      transform.LookAt(player.transform.position + Vector3.down);
 
       // If enemy has no health left start dying
       if (health < 1 & alive == true)

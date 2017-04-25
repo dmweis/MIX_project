@@ -33,6 +33,10 @@ public class Board : MonoBehaviour
    private void OnMove(string message)
    {
       MarkerUpdate marker = JsonUtility.FromJson<MarkerUpdate>(message);
+        if (marker.Type == "remove")
+        {
+            marker.Row = 4;
+        }
       print("Moving " + marker.Id + " to " + marker.Row + " " + marker.Column);
       Vector3 newPosition = GetAnchor(marker.Column, marker.Row);
       if (!_enemies.ContainsKey(marker.Id))
@@ -55,13 +59,17 @@ public class Board : MonoBehaviour
    {
       float xPos = Map(column, 0, ColumnCount, transform.position.x, BottomRight.transform.position.x);
       float zPos = Map(row, 0, RowCount, transform.position.z, BottomRight.transform.position.z);
+        if (row == 4)
+        {
+            return new Vector3(1000, 1000, 1000);
+        }
       return new Vector3(xPos, 0, zPos);
    }
 
    public Vector2 CalculateRowCol(Vector3 position)
    {
       int row = (int) Math.Round(Map(position.x, transform.position.x, BottomRight.transform.position.x, 0, ColumnCount));
-      int column = (int) Math.Round(Map(position.y, transform.position.y, BottomRight.transform.position.y, 0, RowCount));
+      int column = (int) Math.Round(Map(position.z, transform.position.z, BottomRight.transform.position.z, 0, RowCount));
       return new Vector2(row, column);
    }
 

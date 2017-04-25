@@ -21,7 +21,7 @@ public class ControllerScript : MonoBehaviour
       TeleporterBeam.SetActive(false);
       trackedObject = GetComponent<SteamVR_TrackedObject>();
       _timeOfLastShot = Time.time;
-   }
+    }
 
    // Update is called once per frame
    void FixedUpdate()
@@ -45,7 +45,7 @@ public class ControllerScript : MonoBehaviour
     private void NewShoot()
     {
         _timeOfLastShot = Time.time;
-        print("Player shooting");
+        //print("Player shooting");
         GameObject newBullet = Instantiate(Fireball, transform.position, transform.rotation * Quaternion.Euler(Vector3.right * 30));
         newBullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
     }
@@ -67,7 +67,7 @@ public class ControllerScript : MonoBehaviour
             Vector2 rowCol = GameObject.Find("Board").GetComponent<Board>().CalculateRowCol(newTransform.position);
             int row = (int) rowCol.x;
             int col = (int) rowCol.y;
-            GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new LocationUpdate(0, row, col), "location_update");
+            GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new LocationUpdate(-1, row, col), "location_update");
          }
          else
          {
