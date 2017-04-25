@@ -16,7 +16,10 @@ namespace CameraTracker.Chessboard
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Dictionary<int, Rectangle> _activeMarkers = new Dictionary<int, Rectangle>();
+        private Dictionary<int, CharacterCard> _activeMarkers = new Dictionary<int, CharacterCard>();
+
+        private List<string> _monsterNames = new List<string>() { "Kyle", "Kenny", "Cartman", "Stan" };
+        private int _iterator = 0;
 
         public MainWindow(TrackingService tracker, IModel channel)
         {
@@ -33,15 +36,24 @@ namespace CameraTracker.Chessboard
 
                     Dispatcher.Invoke(() =>
                     {
-                        var rectangle = new Rectangle { Stroke = Brushes.Red, StrokeThickness = 200 };
-
+                        CharacterCard monster;
                         if (_activeMarkers.ContainsKey(id))
                         {
-                            MainGrid.Children.Remove(_activeMarkers[id]);
+                            monster = _activeMarkers[id];
+                            MainGrid.Children.Remove(monster);
+                        }
+                        else
+                        {
+                            monster = new CharacterCard()
+                            {
+                                Color = Brushes.Red,
+                                Name = GetNextMonsterName(),
+                                Health = 100
+                            };
                         }
 
-                        _activeMarkers[id] = rectangle;
-                        AddToGrid(rectangle, row, column);
+                        _activeMarkers[id] = monster;
+                        AddToGrid(monster, row, column);
                         Debug.WriteLine($"Id: {id} moved to Column: {column} Row: {row}");
                     });
                 });
@@ -70,6 +82,11 @@ namespace CameraTracker.Chessboard
             };
 
             AddToGrid(player, 2, 2);
+        }
+
+        private string GetNextMonsterName()
+        {
+            return _monsterNames[_iterator++ % _monsterNames.Count];
         }
 
         private void AddToGrid(UIElement element, int row, int column)
