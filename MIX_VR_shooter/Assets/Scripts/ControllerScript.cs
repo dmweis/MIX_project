@@ -8,6 +8,7 @@ public class ControllerScript : MonoBehaviour
 {
 
    public GameObject Bullet;
+   public GameObject Fireball;
    public GameObject TeleporterBeam;
 
    private SteamVR_TrackedObject trackedObject;
@@ -25,15 +26,29 @@ public class ControllerScript : MonoBehaviour
    // Update is called once per frame
    void FixedUpdate()
    {
-      if (Time.time - _timeOfLastShot > 0.150f && controller.GetHairTrigger())
+      //if (Time.time - _timeOfLastShot > 0.150f && controller.GetHairTrigger())
+      if (controller.GetHairTriggerDown())
       {
-         _timeOfLastShot = Time.time;
-         print("Triggered");
-         GameObject newBullet = Instantiate(Bullet, transform.position, Quaternion.identity);
-         newBullet.GetComponent<Rigidbody>().AddForce(Quaternion.AngleAxis(-30, transform.right) * transform.up * -100, ForceMode.VelocityChange);
-         Destroy(newBullet, 6);
+            NewShoot();
       }
    }
+
+    private void OldShoot()
+    {
+        _timeOfLastShot = Time.time;
+        print("Triggered");
+        GameObject newBullet = Instantiate(Bullet, transform.position, Quaternion.identity);
+        newBullet.GetComponent<Rigidbody>().AddForce(Quaternion.AngleAxis(-30, transform.right) * transform.up * -100, ForceMode.VelocityChange);
+        Destroy(newBullet, 6);
+    }
+
+    private void NewShoot()
+    {
+        _timeOfLastShot = Time.time;
+        print("Player shooting");
+        GameObject newBullet = Instantiate(Fireball, transform.position, transform.rotation);
+        newBullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+    }
 
    void Update()
    {
@@ -48,11 +63,11 @@ public class ControllerScript : MonoBehaviour
          {
             print("Teleporting");
             transform.root.gameObject.transform.position = newTransform.position;
-            transform.root.gameObject.transform.rotation = newTransform.rotation;
+            //transform.root.gameObject.transform.rotation = newTransform.rotation;
             Vector2 rowCol = GameObject.Find("Board").GetComponent<Board>().CalculateRowCol(newTransform.position);
             int row = (int) rowCol.x;
             int col = (int) rowCol.y;
-            GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new LocationUpdate(0, row, col), "");
+            GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new LocationUpdate(0, row, col), "location_update");
          }
          else
          {

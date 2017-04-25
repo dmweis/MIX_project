@@ -34,7 +34,7 @@ public class EnemyBehaviour : MonoBehaviour
       fireballSpawn = transform.FindChild("FireballSpawn");
       health = totalHealth;
       maxHealth = totalHealth;
-      player = GameObject.FindGameObjectWithTag("Player");
+        player = Camera.main.gameObject;
       CurrentState = STATE_IDLE;
       alive = true;
    }
@@ -148,7 +148,7 @@ public class EnemyBehaviour : MonoBehaviour
          health -= damageWhenHit;
          // Update healthbar
          healthBar.fillAmount = health / maxHealth;
-         GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new HealthUpdate(Id, (int)health), string.Empty);
+         GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new HealthUpdate(Id, (int)health), "health_update");
       }
    }
 }

@@ -24,9 +24,15 @@ public class TeleporterBeamScript : MonoBehaviour
 
    public Transform GetAnchor()
    {
+      if (_dome == null)
+      {
+            print("No dome selected");
+          return null;
+      }
       DomeScript domeScript = _dome.GetComponent<DomeScript>();
       if (domeScript == null)
       {
+            print("No dome script found on object");
          return null;
       }
       Transform domeAnchor = domeScript.Anchor;
@@ -40,4 +46,12 @@ public class TeleporterBeamScript : MonoBehaviour
          _dome = other.gameObject;
       }
    }
+
+   void OnTriggerExit(Collider other)
+   {
+       if (other.gameObject.tag == "Respawn")
+       {
+           _dome = null;
+       }
+    }
 }

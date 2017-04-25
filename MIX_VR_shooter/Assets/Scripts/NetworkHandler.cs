@@ -17,18 +17,29 @@ public class NetworkHandler : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        _connectionfactory = new ConnectionFactory() { HostName = "localhost" };
+        //_connectionfactory = new ConnectionFactory() { HostName = "localhost" };
+        
         _connection = _connectionfactory.CreateConnection();
         _channel = _connection.CreateModel();
+        _channel.ExchangeDeclare("health_update", "fanout");
+        _channel.ExchangeDeclare("location_update", "fanout");
     }
 
     public void Register(string exchangeName, Action<string> callback)
     {
         if (!_subscribers.ContainsKey(exchangeName))
         {
+            print("Registering");
             _channel.ExchangeDeclare(exchangeName, "fanout");
-            _channel.QueueBind(_channel.QueueDeclare().QueueName, exchangeName, "");
-            new EventingBasicConsumer(_channel).Received += (sender, args) => _messageQueue.Enqueue(args);
+            string queueName = _channel.QueueDeclare().QueueName;
+            _channel.QueueBind(queueName, exchangeName, "");
+            EventingBasicConsumer consumer = new EventingBasicConsumer(_channel);
+            consumer.Received += (sender, args) =>
+            {
+                print("Recieved message " + Encoding.ASCII.GetString( args.Body));
+                _messageQueue.Enqueue(args);
+            };
+            _channel.BasicConsume(queueName, false, consumer);
             _subscribers[exchangeName] = new List<Action<string>>();
         }
         _subscribers[exchangeName].Add(callback);
@@ -36,6 +47,7 @@ public class NetworkHandler : MonoBehaviour
 
    public void SendMessage(object message, string exchange)
    {
+      
       string json = JsonUtility.ToJson(message);
       byte[] data = Encoding.UTF8.GetBytes(json);
       _channel.BasicPublish(exchange, string.Empty, null, data);
@@ -47,6 +59,7 @@ public class NetworkHandler : MonoBehaviour
 
         while (_messageQueue.Count > 0)
         {
+            print("Dequeuing message");
             BasicDeliverEventArgs messageArgs;
             bool isDequeueSuccessful = _messageQueue.TryDequeue(out messageArgs);
             if (isDequeueSuccessful)
