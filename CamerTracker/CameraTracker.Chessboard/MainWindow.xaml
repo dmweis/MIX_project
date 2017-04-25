@@ -7,6 +7,9 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <Grid x:Name="MainGrid">
+        <Grid.Background>
+            <ImageBrush ImageSource="images/surface.jpg" Stretch="UniformToFill"/>
+        </Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -25,7 +28,7 @@
 
 
         </Border>
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" Background="White">
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" >
             <Grid ShowGridLines="True">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -42,13 +45,17 @@
             </Grid>
         </Border>
         <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4">
-            <Grid x:Name="Bench">
+            <Grid x:Name="Bench" Background="#131320" Opacity="0.85">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="1" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="2" Source="images/Bench.png" Stretch="Fill"/>
+                <Image Grid.Column="3" Source="images/Bench.png" Stretch="Fill"/>
             </Grid>
         </Border>
         <Image x:Name="ImageZero" Grid.Row="0" Grid.Column="0" Source="images/Marker_0.png"/>
