@@ -43,7 +43,36 @@ public class ControllerScript : MonoBehaviour
       }
       else if (controller.GetPressUp(EVRButtonId.k_EButton_Grip))
       {
+         Transform newTransform = TeleporterBeam.GetComponent<TeleporterBeamScript>().GetAnchor();
+         if (newTransform != null)
+         {
+            print("Teleporting");
+            transform.root.gameObject.transform.position = newTransform.position;
+            transform.root.gameObject.transform.rotation = newTransform.rotation;
+            Vector2 rowCol = GameObject.Find("Board").GetComponent<Board>().CalculateRowCol(newTransform.position);
+            int row = (int) rowCol.x;
+            int col = (int) rowCol.y;
+            GameObject.Find("NetworkManager").GetComponent<NetworkHandler>().SendMessage(new LocationUpdate(0, row, col), "");
+         }
+         else
+         {
+            print("No targets");
+         }
          TeleporterBeam.SetActive(false);
       }
+   }
+}
+[Serializable]
+class LocationUpdate
+{
+   public int Id;
+   public int NewRowLocation;
+   public int NewColumnLocation;
+
+   public LocationUpdate(int id, int row, int column)
+   {
+      Id = id;
+      NewRowLocation = row;
+      NewColumnLocation = column;
    }
 }
