@@ -34,6 +34,13 @@ public class NetworkHandler : MonoBehaviour
         _subscribers[exchangeName].Add(callback);
     }
 
+   public void SendMessage(object message, string exchange)
+   {
+      string json = JsonUtility.ToJson(message);
+      byte[] data = Encoding.UTF8.GetBytes(json);
+      _channel.BasicPublish(exchange, string.Empty, null, data);
+   }
+
     // Update is called once per frame
     void Update()
     {
