@@ -8,6 +8,9 @@ using CameraTracker.Camera;
 using System.Collections.Generic;
 using System.Diagnostics;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System.Text;
+using Newtonsoft.Json;
 
 namespace CameraTracker.Chessboard
 {
@@ -24,6 +27,61 @@ namespace CameraTracker.Chessboard
         public MainWindow(TrackingService tracker, IModel channel)
         {
             InitializeComponent();
+
+            string locationQueue = channel.QueueDeclare().QueueName;
+            string healthQueue = channel.QueueDeclare().QueueName;
+
+            channel.ExchangeDeclare("location_update", "fanout");
+            channel.ExchangeDeclare("health_update", "fanout");
+
+            channel.QueueBind(locationQueue, "location_update", "");
+            channel.QueueBind(healthQueue, "health_update", "");
+
+            var locationConsumer = new EventingBasicConsumer(channel);
+            var healthConsumer = new EventingBasicConsumer(channel);
+
+            channel.BasicConsume(locationQueue, true, locationConsumer);
+            channel.BasicConsume(healthQueue, true, healthConsumer);
+
+            Observable.FromEventPattern<BasicDeliverEventArgs>(healthConsumer, "Received")
+                .Subscribe(evt =>
+                {
+                    string body = Encoding.UTF8.GetString(evt.EventArgs.Body);
+                    var healthUpdate = JsonConvert.DeserializeObject<HealthUpdate>(body);
+
+                    if (healthUpdate != null)
+                    {
+                        if (_activeMarkers.ContainsKey(healthUpdate.Id))
+                        {
+                            Dispatcher.Invoke(() =>
+                            {
+                                _activeMarkers[healthUpdate.Id].Health = healthUpdate.NewHealth;
+                            });
+                        }
+
+                    }
+                });
+
+            Observable.FromEventPattern<BasicDeliverEventArgs>(locationConsumer, "Received")
+                .Subscribe(evt =>
+                {
+                    string body = Encoding.UTF8.GetString(evt.EventArgs.Body);
+                    var locationUpdate = JsonConvert.DeserializeObject<LocationUpdate>(body);
+
+                    if (locationUpdate != null)
+                    {
+                        if (_activeMarkers.ContainsKey(locationUpdate.Id))
+                        {
+                            var character = _activeMarkers[locationUpdate.Id];
+                            Dispatcher.Invoke(() =>
+                            {
+                                MainGrid.Children.Remove(character);
+                                AddToGrid(character, locationUpdate.NewRowLocation, locationUpdate.NewColumnLocation);
+                            });
+                        }
+
+                    }
+                });
 
             Observable.FromEventPattern<MarkerChangeEventArgs>(tracker, "MarkerChanged")
                 .SkipWhile(evt => evt.EventArgs.Y <= 0 || evt.EventArgs.Y >= 4)
@@ -47,7 +105,7 @@ namespace CameraTracker.Chessboard
                             monster = new CharacterCard()
                             {
                                 Color = Brushes.Red,
-                                Name = GetNextMonsterName(),
+                                CharacterName = GetNextMonsterName(),
                                 Health = 100
                             };
                         }
@@ -73,13 +131,14 @@ namespace CameraTracker.Chessboard
                     Debug.WriteLine($"Id: {id} removed");
                 });
 
-
             CharacterCard player = new CharacterCard()
             {
                 CharacterName = "Player",
                 Health = 100,
                 Color = Brushes.Green
             };
+
+            _activeMarkers[-1] = player;
 
             AddToGrid(player, 2, 2);
         }

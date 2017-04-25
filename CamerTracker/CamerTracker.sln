@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamerTracker.Console", "CamerTracker.Console\CamerTracker.Console.csproj", "{017994EF-CC56-40E3-9BC4-C9B0C95200D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CamerTracker.TestConsole", "CamerTracker.Console\CamerTracker.TestConsole.csproj", "{017994EF-CC56-40E3-9BC4-C9B0C95200D1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CameraTracker.Chessboard", "CameraTracker.Chessboard\CameraTracker.Chessboard.csproj", "{24F23C45-D238-468A-B451-F338CD37C392}"
 EndProject
