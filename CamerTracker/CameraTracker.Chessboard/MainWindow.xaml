@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CameraTracker.Chessboard"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
-    <Grid x:Name="MainGrid" ShowGridLines="True">
+    <Grid x:Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition/>
@@ -21,6 +21,36 @@
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+        <Border Grid.Column="1" Grid.ColumnSpan="3" BorderBrush="Black" BorderThickness="1">
+
+
+        </Border>
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Grid.RowSpan="3" BorderBrush="Black" BorderThickness="1" Background="White">
+            <Grid ShowGridLines="True">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Border>
+        <Border Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="4">
+            <Grid x:Name="Bench">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Border>
         <Image x:Name="ImageZero" Grid.Row="0" Grid.Column="0" Source="images/Marker_0.png"/>
         <Image x:Name="ImageOne" Grid.Row="0" Grid.Column="4" Source="images/Marker_1.png"/>
         <Image x:Name="ImageTwo" Grid.Row="4" Grid.Column="0" Source="images/Marker_2.png"/>

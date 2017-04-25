@@ -26,7 +26,6 @@ namespace CameraTracker.Chessboard
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
             _channel.ExchangeDeclare("marker_update", "fanout");
-
             _tracker = new TrackingService(5, 5);
 
             Observable
@@ -63,7 +62,7 @@ namespace CameraTracker.Chessboard
                     _channel.BasicPublish("marker_update", "", null, body);
                 });
 
-            MainWindow mainWindow = new MainWindow(_tracker);
+            MainWindow mainWindow = new MainWindow(_tracker, _channel);
             mainWindow.Show();
         }
 

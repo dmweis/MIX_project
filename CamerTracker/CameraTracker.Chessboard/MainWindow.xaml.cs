@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using CameraTracker.Camera;
 using System.Collections.Generic;
 using System.Diagnostics;
+using RabbitMQ.Client;
 
 namespace CameraTracker.Chessboard
 {
@@ -17,11 +18,13 @@ namespace CameraTracker.Chessboard
     {
         private Dictionary<int, Rectangle> _activeMarkers = new Dictionary<int, Rectangle>();
 
-        public MainWindow(TrackingService tracker)
+        public MainWindow(TrackingService tracker, IModel channel)
         {
             InitializeComponent();
 
             Observable.FromEventPattern<MarkerChangeEventArgs>(tracker, "MarkerChanged")
+                .SkipWhile(evt => evt.EventArgs.Y <= 0 || evt.EventArgs.Y >= 4)
+                .SkipWhile(evt => evt.EventArgs.MarkerId <= 2)
                 .Subscribe(evt =>
                 {
                     int id = evt.EventArgs.MarkerId;
@@ -38,9 +41,7 @@ namespace CameraTracker.Chessboard
                         }
 
                         _activeMarkers[id] = rectangle;
-                        MainGrid.Children.Add(rectangle);
-                        Grid.SetColumn(rectangle, column);
-                        Grid.SetRow(rectangle, row);
+                        AddToGrid(rectangle, row, column);
                         Debug.WriteLine($"Id: {id} moved to Column: {column} Row: {row}");
                     });
                 });
@@ -59,6 +60,23 @@ namespace CameraTracker.Chessboard
                     }
                     Debug.WriteLine($"Id: {id} removed");
                 });
+
+
+            CharacterCard player = new CharacterCard()
+            {
+                CharacterName = "Player",
+                Health = 100,
+                Color = Brushes.Green
+            };
+
+            AddToGrid(player, 2, 2);
+        }
+
+        private void AddToGrid(UIElement element, int row, int column)
+        {
+            MainGrid.Children.Add(element);
+            Grid.SetRow(element, row);
+            Grid.SetColumn(element, column);
         }
     }
 }

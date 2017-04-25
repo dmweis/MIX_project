@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="CameraTracker.Chessboard.CharacterCard"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CameraTracker.Chessboard"
+             xmlns:fa="http://schemas.fontawesome.io/icons/"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300"
+             x:Name="characterCard">
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Tahoma" />
+            <Setter Property="FontSize" Value="32" />
+            <Setter Property="FontWeight" Value="Bold" />
+        </Style>
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Center">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Border Grid.Row="1" Padding="5">
+            <fa:ImageAwesome Icon="Male" Foreground="{Binding Color, ElementName=characterCard}"/>
+        </Border>
+        <Grid Grid.Column="1" Margin="50">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+        <Label HorizontalAlignment="Center" Content="{Binding CharacterName, ElementName=characterCard}" />
+        <Border Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <fa:ImageAwesome VerticalAlignment="Center" Icon="Heart" Height="30" Foreground="Red" />
+                <Label VerticalAlignment="Center" Content="{Binding Health, ElementName=characterCard}" />
+            </StackPanel>
+        </Border>
+        </Grid>
+    </Grid>
+</UserControl>
