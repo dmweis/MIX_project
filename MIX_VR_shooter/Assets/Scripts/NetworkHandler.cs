@@ -18,7 +18,7 @@ public class NetworkHandler : MonoBehaviour
     void Start()
     {
         //_connectionfactory = new ConnectionFactory() { HostName = "localhost" };
-        
+        _connectionfactory = new ConnectionFactory() { Uri = @"amqp://ruzmquwb:uSALbfFaxJIyw_wvT_MEWx8o-SBHaeK0@lark.rmq.cloudamqp.com/ruzmquwb" };
         _connection = _connectionfactory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.ExchangeDeclare("health_update", "fanout");

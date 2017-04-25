@@ -46,7 +46,7 @@ public class ControllerScript : MonoBehaviour
     {
         _timeOfLastShot = Time.time;
         print("Player shooting");
-        GameObject newBullet = Instantiate(Fireball, transform.position, transform.rotation);
+        GameObject newBullet = Instantiate(Fireball, transform.position, transform.rotation * Quaternion.Euler(Vector3.right * 30));
         newBullet.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
     }
 

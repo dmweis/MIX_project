@@ -43,14 +43,18 @@ public class Board : MonoBehaviour
       }
       else
       {
-         _enemies[marker.Id].Move(newPosition);
+         EnemyBehaviour enemy = _enemies[marker.Id];
+        if (enemy != null)
+        {
+            enemy.Move(newPosition);
+        }
       }
    }
 
    private Vector3 GetAnchor(int column, int row)
    {
       float xPos = Map(column, 0, ColumnCount, transform.position.x, BottomRight.transform.position.x);
-      float zPos = Map(row, 0, RowCount, transform.position.y, BottomRight.transform.position.y);
+      float zPos = Map(row, 0, RowCount, transform.position.z, BottomRight.transform.position.z);
       return new Vector3(xPos, 0, zPos);
    }
 
